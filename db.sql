@@ -138,3 +138,14 @@ FROM generate_series(1, 500);
 -- SELECT * FROM Subject;
 -- SELECT * FROM Student;
 -- SELECT * FROM Enrollment;
+
+SELECT 'semester' AS table_name, COUNT(*) FROM semester
+UNION ALL
+SELECT 'course', COUNT(*) FROM course
+UNION ALL
+SELECT 'subject', COUNT(*) FROM subject
+UNION ALL
+SELECT 'student', COUNT(*) FROM student
+UNION ALL
+SELECT 'enrollment', COUNT(*) FROM enrollment;
+

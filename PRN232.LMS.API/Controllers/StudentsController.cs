@@ -8,8 +8,12 @@ using PRN232.LMS.Services.Models.Queries;
 
 namespace PRN232.LMS.API.Controllers;
 
+/// <summary>
+/// Manage student resources.
+/// </summary>
 [ApiController]
 [Route("api/students")]
+[Produces("application/json")]
 public class StudentsController : ControllerBase
 {
     private readonly IStudentService _studentService;
@@ -19,7 +23,11 @@ public class StudentsController : ControllerBase
         _studentService = studentService;
     }
 
+    /// <summary>
+    /// Get paginated list of students.
+    /// </summary>
     [HttpGet]
+    [ProducesResponseType(typeof(ApiResponse<PagedData<object>>), StatusCodes.Status200OK)]
     public async Task<ActionResult<ApiResponse<PagedData<object>>>> GetList(
         [FromQuery] string? search,
         [FromQuery] string? sort,
@@ -57,7 +65,12 @@ public class StudentsController : ControllerBase
         return Ok(ApiResponse<PagedData<object>>.Ok(data));
     }
 
+    /// <summary>
+    /// Get a student by id.
+    /// </summary>
     [HttpGet("{id:int}")]
+    [ProducesResponseType(typeof(ApiResponse<StudentResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<StudentResponse>), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ApiResponse<StudentResponse>>> GetById(
         int id,
         [FromQuery] string? expand = null)
@@ -71,7 +84,12 @@ public class StudentsController : ControllerBase
         return Ok(ApiResponse<StudentResponse>.Ok(student.ToResponse()));
     }
 
+    /// <summary>
+    /// Create a new student.
+    /// </summary>
     [HttpPost]
+    [ProducesResponseType(typeof(ApiResponse<StudentResponse>), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(ApiResponse<StudentResponse>), StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<ApiResponse<StudentResponse>>> Create([FromBody] CreateStudentRequest request)
     {
         if (!ModelState.IsValid)
@@ -86,7 +104,13 @@ public class StudentsController : ControllerBase
             ApiResponse<StudentResponse>.Ok(created.ToResponse(), "Student created successfully"));
     }
 
+    /// <summary>
+    /// Update an existing student.
+    /// </summary>
     [HttpPut("{id:int}")]
+    [ProducesResponseType(typeof(ApiResponse<StudentResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<StudentResponse>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<StudentResponse>), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ApiResponse<StudentResponse>>> Update(
         int id,
         [FromBody] UpdateStudentRequest request)
@@ -105,7 +129,12 @@ public class StudentsController : ControllerBase
         return Ok(ApiResponse<StudentResponse>.Ok(updated.ToResponse(), "Student updated successfully"));
     }
 
+    /// <summary>
+    /// Delete a student by id.
+    /// </summary>
     [HttpDelete("{id:int}")]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status404NotFound)]
     public async Task<ActionResult<ApiResponse<object>>> Delete(int id)
     {
         var deleted = await _studentService.DeleteAsync(id);

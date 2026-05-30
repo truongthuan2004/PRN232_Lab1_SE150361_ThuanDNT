@@ -31,6 +31,28 @@ public static class CommonApiMappings
             EndDate = model.EndDate
         };
 
+    public static object ToResponseObject(this SemesterBusinessModel model, string? fields = null)
+    {
+        var response = model.ToResponse();
+        if (string.IsNullOrWhiteSpace(fields))
+        {
+            return response;
+        }
+
+        var allowed = fields
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(f => f.ToLowerInvariant())
+            .ToHashSet();
+
+        var result = new Dictionary<string, object?>();
+        if (allowed.Contains("semesterid")) result["semesterId"] = response.SemesterId;
+        if (allowed.Contains("semestername")) result["semesterName"] = response.SemesterName;
+        if (allowed.Contains("startdate")) result["startDate"] = response.StartDate;
+        if (allowed.Contains("enddate")) result["endDate"] = response.EndDate;
+
+        return result;
+    }
+
     public static CourseBusinessModel ToBusinessModel(this CreateCourseRequest request) =>
         new()
         {
@@ -52,6 +74,27 @@ public static class CommonApiMappings
             CourseName = model.CourseName,
             SemesterId = model.SemesterId
         };
+
+    public static object ToResponseObject(this CourseBusinessModel model, string? fields = null)
+    {
+        var response = model.ToResponse();
+        if (string.IsNullOrWhiteSpace(fields))
+        {
+            return response;
+        }
+
+        var allowed = fields
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(f => f.ToLowerInvariant())
+            .ToHashSet();
+
+        var result = new Dictionary<string, object?>();
+        if (allowed.Contains("courseid")) result["courseId"] = response.CourseId;
+        if (allowed.Contains("coursename")) result["courseName"] = response.CourseName;
+        if (allowed.Contains("semesterid")) result["semesterId"] = response.SemesterId;
+
+        return result;
+    }
 
     public static SubjectBusinessModel ToBusinessModel(this CreateSubjectRequest request) =>
         new()
@@ -77,6 +120,28 @@ public static class CommonApiMappings
             SubjectName = model.SubjectName,
             Credit = model.Credit
         };
+
+    public static object ToResponseObject(this SubjectBusinessModel model, string? fields = null)
+    {
+        var response = model.ToResponse();
+        if (string.IsNullOrWhiteSpace(fields))
+        {
+            return response;
+        }
+
+        var allowed = fields
+            .Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Select(f => f.ToLowerInvariant())
+            .ToHashSet();
+
+        var result = new Dictionary<string, object?>();
+        if (allowed.Contains("subjectid")) result["subjectId"] = response.SubjectId;
+        if (allowed.Contains("subjectcode")) result["subjectCode"] = response.SubjectCode;
+        if (allowed.Contains("subjectname")) result["subjectName"] = response.SubjectName;
+        if (allowed.Contains("credit")) result["credit"] = response.Credit;
+
+        return result;
+    }
 
     public static EnrollmentBusinessModel ToBusinessModel(this CreateEnrollmentRequest request) =>
         new()
